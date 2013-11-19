@@ -1,26 +1,63 @@
 % AlgoProjekt Dokumentation.
 % Geschrieben in Gummi.
 \documentclass[11pt]{article}
-\usepackage[ngerman]{babel}              % für die deutsche Sprache nach neuer Rechtschreibung.
-\usepackage[latin1]{inputenc}           % für die Nutzung deutscher Umlauten (Linux)
-%\usepackage[ansinew]{inputenc}           % für die Nutzung deutscher Umlauten (Windows).
-\usepackage[T1]{fontenc}                 % Nutzung der erweiterten Zeichensätze. 
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel} 
+\usepackage{lmodern}            
 \title{\textbf{AlgoProjekt}}
 \author{Maria Markst\"adter\\
-		Noel Kuntze\\
-		Ruben Anders\\}
+                Noel Kuntze\\
+                Ruben Anders\\}
 \date{\today}
 \begin{document}
 
 \maketitle
-\newpage
-
+ 
 \tableofcontents
-\newpage
-
-\section{\"Uber dieses Dokument}
+  \section{Unser Programm}
 Dieses Dokument ist ein Teil des Projekts der Autoren im Rahmen ihres Studiums an der Hochschule Offenburg.
-
-\section{Einf\"uhrung}
+  \subsection{Programmkurzbeschreibung}
+  sdsds
+  \subsection{Programmkenndaten}
+  dsadsad
+  
+  \section{Programmfunktion}
+  dsdsads
+  \subsection{Aufgabenstellung}
+  Wir wollen ein einfaches, passwortbasiertes Zugangssystem angreifen. Das Zugangssystem
+funktioniert wie folgt:
+\begin{itemize} 
+\item Der Nutzer, der sich authentifizieren will, gibt an einem gesicherten Terminal sein
+Passwort ein. Der String wird mit Hilfe der kryptographischen Hashfunktion SHA-1
+gehasht. Verwendet werden allerdings nur die letzten 4 Byte.
+\item Das Terminal sendet diesen sogenannten Message Digest zum Authentifikationsser-
+ver. Dieser vergleicht den erhaltenen Message Digest mit dem Wert, den er für die-
+sen Nutzer gespeichert hat. Sind die beiden identisch, wird der Zugang freigegeben,
+ansonsten nicht.
+\end{itemize}
+  \subsection{Theoretische Grundlagen}
+  \subsection{Funktionshirachie}
+  \subsection{Methoden/Algorithmen}
+ 
+  
+  
+  \section{Programmaufbau}
+  \subsection{Programmbausteine}
+  \subsection{Programmstruktur}
+  
+  
+  \section{Programmablauf}
+  \subsection{Programmablaufbeschreibung} 
+  \subsection{Funktionshirachie}
+  \subsection{Methoden/Algorithmen}
+  
+   \section{Programmtest}
+  \subsection{Testziele}
+  \subsection{Testverfahren}
+  \subsection{Testfälle/Testresultate}
+  \dots
+   
+ 
+\newpage
 
 \end{document}
