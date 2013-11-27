@@ -11,20 +11,22 @@
                 Noel Kuntze\\
                 Ruben Anders\\}
 \date{\today}
-\begin{document}
+\begin{document} 
 
 \maketitle
-
-\newpage
-
+ 
 \tableofcontents
-
-\newpage
-
   \section{Unser Programm}
 Dieses Dokument ist ein Teil des Projekts der Autoren im Rahmen ihres Studiums an der Hochschule Offenburg.
   \subsection{Programmkurzbeschreibung}
-  sdsds
+  Szenario:
+Über ein Terminal wird ein Passwort eingegeben und  mittels der Hashfunktion SHA-1 verschlüsselt. Die letzten 4 Bytes (sog. Message Digest) werden über eine ungesicherte Leitung übertragen und am Authentifikationsserver mit dem Wert der für den Nutzer gespeichert wurde, verglichen. \newline 
+Ziel ist es, ein gesnifftes Message Digest mit einer zuvor berechneten Hashtabelle zu vergleichen und so das Passwort herauszufinden.\vspace{2px}   \newline 
+{\itshape{Dies findet in 2 Phasen statt:}} \vspace{2px}   \newline
+Precomputation-Phase: Es werden Passwort und Message Digest berechnet und in einer Hashtable gespeichert.\vspace{2px} \newline 
+Online-Phase: Der gesniffte Message Digest wird mit der zuvor berechneten Hashtable verglichen und so das dazugehörige Passwort herausgelesen. 
+Es gilt mehrere Module zu Programmieren, die zum einen eine Hashtable erzeugen in der Passwort und Message Digest berechnet werden sowie in einer Hashtable einen zuvor gesnifften Message Digest nachschlagen und das dazugehörige Passwort ausgeben. Dies wird durch Interface unterstützt die es dem Benutzer ermöglicht einzelne Phasen anzuwählen und erstellte Hashtables zu speichern oder zu laden.
+
   \subsection{Programmkenndaten}
   \subsubsection{Programmidentifizierung}
   \paragraph{Programmname}
@@ -337,7 +339,7 @@ Im Code wird versucht einen FileInputStream von der Datei zu erstellen, sodass i
   \subsection{Testziele}
   \subsection{Testverfahren}
   \subsection{Testfälle/Testresultate}
-  \dots
+   
    
  
 \newpage
