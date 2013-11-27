@@ -3,9 +3,11 @@
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel} 
-\usepackage{lmodern}            
+\usepackage{lmodern}
+\usepackage{listings}
+\lstset{language=Java}
 \title{\textbf{AlgoProjekt}}
-\author{Maria Markstäadter\\
+\author{Maria Markstädter\\
                 Noel Kuntze\\
                 Ruben Anders\\}
 \date{\today}
@@ -28,7 +30,7 @@ Dieses Dokument ist ein Teil des Projekts der Autoren im Rahmen ihres Studiums a
   \paragraph{Programmname}
   AlgoProjekt
   \paragraph{Systemzuordnung des Programms}
-  Kryptologie
+  Kryptographie
   \paragraph{Programmversion}
   Version 1.0
   \paragraph{Freigabedatum}
@@ -48,18 +50,287 @@ sen Nutzer gespeichert hat. Sind die beiden identisch, wird der Zugang freigegeb
 ansonsten nicht.
 \end{itemize}
   \subsection{Theoretische Grundlagen}
-  \subsection{Funktionshirachie}
+  \subsection{Funktionshierarchie}
   \subsection{Methoden/Algorithmen}
-  
-  
-  \section{Programmaufbau}
+  Im Programm werden verschiedene Algorithmen benutzt, um das Problem der Passwortgenerierung, Prüfsummenberechnung, Füllung der Hashtabelle, serialisierung und deserialisierung derselbigen zu lösen.
+  \subsubsection{Passwortgenerierung}
+  Der für die Passwortgenerierung genutzte Algorithmus ist dieser: 
+  \begin{lstlisting}[caption=Algorithmus zur Passwortgenerierung, label=lst:Java]
+    public String generatePassword_1
+    (String characters, int length) 
+    {
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++) 
+        {
+            if (reSeedThreshold > 0 && 
+            counter == reSeedThreshold) 
+            {
+                this.reSeed();
+                counter = 0;
+            }
+            text[i] = characters.charAt
+            (gen.nextInt(characters.length()));
+            
+            counter++;
+        }
+        return new String(text);
+    }
+  \end{lstlisting}
+Der Input des Algorithmus besteht aus einem String, in dem die Zeichen, aus dem das Passwort bestehen soll,
+und einem integer, der die Länge des Passworts angibt. Der Rückgabewert der Funktion ist ein zufälliges Passwort aus den Zeichen des Eingabestrings und der Länge des Eingabeintegers.\\
+Der Algorithmus legt zuerst ein Zeichenfeld an, in das dann jeweils ein zufälliges Zeichen hineingeschrieben wird. 
+Es wird ein Zeichenfeld verwendet, da das anlegen einer solchen Variable in Sachen Geschwindigkeit und Speicherplatz  billiger ist als das Anlegen eines Stringbuilders.
+\\
+Es existieren die Klassenattribute "reSeedThreshold", "counter", sowie "gen". Die ersten beiden Attribute sind vom Typ integer und das letzte der Klasse "Random". Die Klasse "Random"\ stellt einen Pseudozufallszahlengenerator (im Folgenden "PRNG" genannt) bereit.
+\\
+Das Attribut "reSeedThreshold"\ wird dazu genutzt den Pseudozufallszahlengenerator von Java nach der eingestellten Anzahl an Lesezugriffen mit einem besseren Zufallswert neu zu initialisieren. Dazu wird die Klasse
+SecureRandom genutzt. Eine Instanz dieser Klasse befindet sich in der gleichen Klasse, in der auch diese Funktion ist. 
+\\
+Das Attribut "counter" wird bei jedem Schleifendurchlauf inkrementiert und hält so die bereits erfolgten Lesezugriffe fest. Bei jeder Neuinitialisierung wird das Attribut "counter"\ auf 0 zurückgesetzt. 
+\\
+Bei jedem Schleifendurchlauf wird eine Zufallszahl aus dem Zahlenraum 0 bis Länge des Eingabestrings erzeugt und das Zeichen in die entsprechenden Stelle des Strings an das Feld "text"\ eingefügt.
+\\
+Nach der For-Schleife wird das fertige Passwort als String von der Funktion zurückgegeben.
+\\
+Der PRNG wird neu initialisiert, um sicherzustellen, dass er nicht in eine Schleife gerät und wiederholt die gleiche Zahlenfolge ausgibt, was zu sich wiederholenden Passwörtern führen würde
+Das Reinitialisieren kann man durch das setzen des Werts "reSeedThreshold"\ auf "0" deaktivieren.
+\subsubsection{Prüfsummenberechnung}
+Für die Prüfsummenberechnung wird dieser Algorithmus genutzt: 
+\begin{lstlisting}[caption=Algorithmus zur Prüfsummenberechnung, label=lst:makeDigest]
+    public static String makeDigest(String passwd, 
+    String algorithm) 
+    {
+        byte digest[];
+        byte shortenedDigest[] = new byte[4];
+        int i;
+        MessageDigest md;
+        
+        try {
+            md = MessageDigest.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println(
+            "Sorry, Java doesn't know that algorithm: "
+             + algorithm);
+            e.printStackTrace();
+            return null;
+        }
+        
+        digest = md.digest(passwd.getBytes());
+        
+        /* We only need the first 32 bit 
+         * (the first 4 byte), so we copy the
+         * last 4 bytes to our own array
+         */
+        for (i = 0; i < 4; i++) {
+            shortenedDigest[i] = digest[digest.length - 4 + i];
+        }
+        
+        /* We need to translate the bytes 
+         * to hexadecimal strings, because HashMaps
+         * and Hashtables use object.equals 
+         * to find matching objects
+         * in the table, which a byte array doesn't provide.
+         */
+         
+        StringBuffer sb = new StringBuffer();
+        
+        /* Transform the byte array into a hexadecimal string */
+        
+        for (i = 0; i < shortenedDigest.length; i++) {
+            sb.append(integer.toString((shortenedDigest[i] & 0xff) 
+            + 0x100, 16).substring(1));
+        }
+        
+        return sb.toString();
+
+    }
+\end{lstlisting}
+Der Funktion werden das Passwort und der zu verwendende Algorithmus in Stringform übergeben.
+Der Rückgabewert der Methode ist eine auf 32-Bit abgeschnittene Prüfsumme des Eingabestrings unter Verwendung des angegebenen Algorithmus.\\
+Zuerst werden die benötigten Variablen deklariert. Das sind zwei Byte-Arrays für die Digests, sowie ein integer als Zählvariable der Zählschleife. Desweiteren wird ein Objekt der Klasse MessageDigest benötigt, um den Hash des Passworts zu berechnen. \\
+Im nächsten Schritt wird versucht eine Instanz des Prüfsummenalgorithmus zu erstellen. Falls das fehlschlägt, wird eine entsprechende Fehlermeldung, sowie ein StackTrace ausgegeben und die Funktion liefert "null" zurück.\\
+Danach wird der Digest des Passworts mit "md.digest(passwd.getBytes())"\ berechnet und in einen StringBuffer geschrieben. Der StringBuffer wird benötigt, da Strings in Java nicht veränderbar sind. Das wird umgangen, indem man StringBuilder oder StringBuffer verwendet. \\
+Im darauf folgenden Schritt werden die letzten 4 Byte des Digest in ein anderes Feld kopiert, welches dann in Hexadezimalschreibweise in einen String geschrieben wird. Das ist nötig, da die Methode "get" der Hashtables und Hashmaps in Java die Methode "equals" des Eingabeobjekts benutzen, um die Eingabeobjekte mit den Objekten in der Tabelle zu vergleichen. Ein Bytearray besitzt diese Methode jedoch nicht, weshalb das Suchen in einer Hashtabelle damit nicht funktionieren würde.
+Im letzten Schritt wird der Inhalt des StringBuffers, der im Moment den Digest darstellt, in einem String umgewandelt und zurückgegeben.\\
+In der Methode werden überwiegend Primitivtypen benutzt, da diese schneller anzulegen sind und einen geringeren Speicherplatzbedarf haben im Vergleich mit komplexen Klassen.
+
+
+\subsubsection{Speicherung}
+\begin{lstlisting}[caption=Algorithmus zur Füllung der Hashtabelle, label=lst:makeTable]
+    public Hashtable<String, String> 
+    makeTable(int amount, String legalChars, int length) {
+        int i;
+        String password;
+        float time1, time2;
+        Hashtable<String, String> table = 
+        new Hashtable<String, String>(amount,95);
+        System.out.println("Generating " + 
+        amount + " hash table entries ...");
+        time1 = System.currentTimeMillis();
+        for (i = 0; i < amount; i++) {
+            password = generatePassword_1
+            (legalChars, length);
+            table.put(makeDigest
+            (password, "SHA-1"), password);
+        }
+        time2 = System.currentTimeMillis();
+        System.out.println("Generating the hash table entries took " 
+        + (time2 - time1) + " ms.");
+        System.out.println("The table now holds " + table.size() 
+        + " entries.");
+        return table;
+    }
+\end{lstlisting}
+Die Methode zur Erstellung einer Hashtabelle lässt sich mit 3 Parametern steuern. Diese sind die Menge an Einträgen, die erstellt werden sollen, die Zeichen, aus denen die Passwörter generiert werden sollen, sowie die Länge der Passwörter.\\
+Die Funktion liefert eine Hashtabelle mit dem gewünschten Inhalt zurück.
+Zuerst werden einige Variablen deklariert. Darunter sind eine Zählvariable i, eine Stringreferenz für das jeweilig generierte Passwort für den Eintrag, zwei floats um die Zeit zu messen, die die Generierung der Tabelle benötigt und eine Hashtabelle, die Strings zu Strings mapt und die entsprechende Größe für die benötigte Menge an Einträgen hat. Das vermeidet das bewegen der Tabelle im Speicher, sobald sie über den Schwellwert hinaus anwächst.\\
+Danach wird eine Meldung für den Benutzer ausgegeben, wieviele Einträge erstellt werden.
+Nun wird die Tabelle mit der entsprechenden Anzahl an Digest-Passwort-Toupeln befüllt. Dazu wird die Methode makeDigest() genutzt.\\
+Für die Zeitmessung wird die Systemzeit vor und nach dem Befüllen der Tabelle festgehalten und die Differenz ermittelt. Die Differenz wird dann an den Benutzer ausgegeben. Am Ende der Methode wird die Anzahl der Einträge in der Tabelle ausgegeben. Daraus kann man die Anzahl an Hash-Kollisionen beim Befüllen der Tabelle berechnen.
+\\Der letzte Schritt ist die Rückgabe der Tabelle.
+\begin{lstlisting}[caption=Algorithmus zur Serialisierung der Hashtabelle, label=lst:serializing]
+    public static void serialize(Hashtable
+    <String, String> table, String path) {
+        System.out.println(
+        "Please wait while the file is being created."
+        );
+        FileOutputStream f_out = null;
+        File file = new File(path);
+        try {
+            file.createNewFile();
+        } catch (IOException IOEx) {
+            System.out.println(
+            "Something bad happened!"
+            );
+            System.out.println("Stacktrace:");
+            IOEx.printStackTrace();
+        }
+        if (!file.canWrite()) {
+            System.out.println(
+            "Can't write to the file. Aborting."
+            );
+        }
+        try {
+            f_out = new FileOutputStream(path);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
+        }
+        ObjectOutputStream obj_out = null;
+        try {
+            obj_out = new ObjectOutputStream(f_out);
+        } catch (IOException | NullPointerException e) {
+            System.out.println("Something bad happened!");
+            System.out.println("Stacktrace:");
+            e.printStackTrace();
+        }
+        //Schreibt das Aray in eine Datei
+        try {
+            obj_out.writeObject(table);
+        } catch (IOException | NullPointerException e) {
+            System.out.println(
+            "Couldn't write the hash table to the file!"
+            );
+        }
+    }
+\end{lstlisting}
+Diese prozedur serialisiert eine gegebene Hashtabelle und speichert sie im gegebenen Pfad.\\
+Zuerst wird eine Meldung für den Benutzer ausgegeben, damit er weiß, dass der Prozess läuft und das Programm arbeitet. Dann wird eine Datei erstellt und auf mögliche Fehler überprüft. Im darauf folgenden Schritt wird versucht das Objekt in die Datei zu schreiben. Überprüfungen der Pfadangabe verhindern, dass ungültige Pfade oder Pfade zu Verzeichnissen der Prozedur übergeben werden. Diese Überprüfungen sind im Code vor dem Aufruf dieser Prozedur untergebracht. 
+\begin{lstlisting}[caption=Algorithmus zur Deserialisierung einer Datei und Einlesen einer Hashtabelle, label=lst:deserializing]
+    public static Hashtable<String, String> 
+    deserialize(String filename) {
+        Hashtable<String, String> table = 
+        new Hashtable<String, String>();
+
+        System.out.println(
+        "Trying to load the hash table from \"" + filename + "\"..."
+        );
+        FileInputStream f_in = null;
+        try {
+            f_in = new FileInputStream(filename);
+        } catch (FileNotFoundException ex) {
+            System.out.println(
+            "The specified file to load doesn't doesn't exist!"
+            );
+        }
+        ObjectInputStream obj_in = null;
+        try {
+            obj_in = new ObjectInputStream(f_in);
+        } catch (IOException ex) {
+            System.out.println(
+            "Couldn't create the ObjectInputStream " +"
+            needed to load the Object from the file!"
+            );
+            return null;
+        }
+        System.out.println("Loading ...");
+        /* We try to read the object from the file */
+        try {
+            table = (Hashtable<String, String>) 
+            obj_in.readObject();
+        } catch (IOException IOex) {
+            System.out.println(
+            "Something bad happened while " +
+            "accessing the specified file!"
+            );
+            return null;
+        } catch (ClassNotFoundException CNF) {
+            System.out.println(
+            "The specified file to load doesn't " +
+             "contain an apropriate object!"
+            );
+            return null;
+        }
+
+        if (table != null) {
+            System.out.println(
+            "The file \"" + filename + 
+            "\" was successfully loaded."
+            );
+        }
+        try {
+            obj_in.close();
+        } catch (IOException ex) {
+            System.out.println(
+            "Couldn't close the ObjectInputStream!"
+            );
+            System.out.println("Stacktrace:");
+            ex.printStackTrace();
+        }
+        try {
+            f_in.close();
+        } catch (IOException ex) {
+            System.out.println(
+            "Couldn't close the FileInputStream!"
+            );
+            System.out.println("Stacktrace:");
+            ex.printStackTrace();
+        }
+        return table;
+    }
+\end{lstlisting}
+Diese Funktion liest eine Hashtabelle aus einem angegebenen Pfad ein und gibt eine Referenz zum eingelesenen Objekt zurück.\\
+Im Code wird versucht einen FileInputStream von der Datei zu erstellen, sodass im Folgenden ein ObjectInputStream erstellt werden kann. Danach wird die Hashtabelle mit dem ObjectInputStream aus der Datei ausgelesen. Am Ende der Funktion werden die InputStreams geschlossen. Während des gesamten Vorgangs werden Ausnahmefehler abgefangen und behandelt.
   \subsection{Programmbausteine}
+  \subsubsection{Main-Funktion}
+  \begin{tabular}{rlr}
+  Variablenname & Typ & Standardwert \\
+  length & int & 6 \\
+  reSeed & int & 150000 \\
+  generateOnly & boolean & false \\
+  interactive & boolean & false \\
+  loadTablePath & String & null \\
+  storeTablePath & String & null \\
+  legalChars & String & (Alle Groß-, Kleinbuchstaben, Ziffern, Sonderzeichen)\\
+  password & String & null \\
+  amount & string & 10000000 \\
+  i & int & nicht initialisiert \\
+  \end{tabular}
   \subsection{Programmstruktur}
   
   
   \section{Programmablauf}
   \subsection{Programmablaufbeschreibung} 
-  \subsection{Funktionshirachie}
+  \subsection{Funktionshierarchie}
   \subsection{Methoden/Algorithmen}
   
    \section{Programmtest}
