@@ -14,8 +14,9 @@
 \begin{document} 
 
 \maketitle
- 
+\newpage
 \tableofcontents
+\newpage
   \section{Unser Programm}
 Dieses Dokument ist ein Teil des Projekts der Autoren im Rahmen ihres Studiums an der Hochschule Offenburg.
   \subsection{Programmkurzbeschreibung}
@@ -313,35 +314,116 @@ Zuerst wird eine Meldung für den Benutzer ausgegeben, damit er weiß, dass der 
 Diese Funktion liest eine Hashtabelle aus einem angegebenen Pfad ein und gibt eine Referenz zum eingelesenen Objekt zurück.\\
 Im Code wird versucht einen FileInputStream von der Datei zu erstellen, sodass im Folgenden ein ObjectInputStream erstellt werden kann. Danach wird die Hashtabelle mit dem ObjectInputStream aus der Datei ausgelesen. Am Ende der Funktion werden die InputStreams geschlossen. Während des gesamten Vorgangs werden Ausnahmefehler abgefangen und behandelt.
   \subsection{Programmbausteine}
-  \subsubsection{Main-Funktion}
+  \subsubsection{Klasse Algoprojekt}
+  \textbf{Methoden in der Klasse}\\
+%  \begin{tabular}{rlr}
+%  Methodenname & Argumente & Rückgabewert & Zweck \\
+%  Main & String args\[\] & void & Hauptfunktion \\
+%  PrintHelpMessage & void & void & Gibt eine Auflistung der Programmargumente zurück \\
+%  \end{tabular}
+  \textbf{Variablen in der Main-Funktion}\\
   \begin{tabular}{rlr}
   Variablenname & Typ & Standardwert \\
   length & int & 6 \\
   reSeed & int & 150000 \\
+  i & int & nicht initialisiert \\
   generateOnly & boolean & false \\
   interactive & boolean & false \\
-  loadTablePath & String & null \\
+  \end{tabular}\\
+  \textbf{Objekte in der Main-Funktion}\\
+  \begin{tabular}{rlr}
+  Variablenname & Klasse & Standardwert \\
+    loadTablePath & String & null \\
   storeTablePath & String & null \\
   legalChars & String & (Alle Groß-, Kleinbuchstaben, Ziffern, Sonderzeichen)\\
   password & String & null \\
-  amount & string & 10000000 \\
-  i & int & nicht initialisiert \\
+  amount & String & 10000000 \\
+  path & String & null \\
   \end{tabular}
   \subsection{Programmstruktur}
-  
-  
   \section{Programmablauf}
+  
   \subsection{Programmablaufbeschreibung} 
   \subsection{Funktionshierarchie}
   \subsection{Methoden/Algorithmen}
   
    \section{Programmtest}
   \subsection{Testziele}
+  Die Testziele sind das Sicherstellen der Funktionalität des Programms und des sicheren Ablaufs desselbigen.
+  
   \subsection{Testverfahren}
+Die Entwicklungsumgebung wird genutzt, um das Programm mit verschiedenen Parameterkombinationen zu starten. Der Tester überprüft dann die Funktionalität des Programms und vergleicht das Verhalten des Programms mit seinem Erwartungen and das Verhalten desselbigen.
   \subsection{Testfälle/Testresultate}
-   
-   
- 
+  \subsubsection{Testfall 1: Generieren und Speichern der Hashtabelle}
+    In diesem Testfall soll die Hashtable generiert und gespeichert werden. Dazu wird das Programm mit den Parametern "-g -o test.ser" aufgerufen. Das Programm generiert dadurch eine Hashtabelle mit den Standardeinstellungen und speichert sie im Arbeitsverzeichnis in die Datei "test.ser".\\
+    \textbf{Programmaufruf:} "java -jar AlgoProjekt.jar -g -o test.ser"\\
+    \textbf{Programmausgabe:}
+    \begin{verbatim}
+Saving in "test.ser"
+Generating 10000000 hash table entries ...
+Generating the hash table entries took 5784 ms.
+The table now holds 9877523 entries.
+Please wait while the file is being created.
+    \end{verbatim}
+    \textbf{Überprüfung der erstellten Datei:}\\
+    Hierzu wird die Datei mit dem Programm geladen. Siehe Test 2.\\
+    \textbf{Programmaufruf:}
+    "java -jar AlgoProjekt.jar -f test.ser"\\
+ 	\textbf{Programmausgabe:}
+ 	\begin{verbatim}
+Trying to load the hash table from "test.ser"...
+Loading ...
+The file "test.ser" was successfully loaded.
+Please enter the password you want to search for: 
+asfasf
+Sorry, no matching entry in the table.
+ 	\end{verbatim}
+ 	Nach der Zeile "Please enter the password you want to search for:"\
+ 	muss ein String eingegeben werden, damit das Programm weiterläuft.\\
+ 	\textbf{Erwartetes Testresultat:}\\
+Das Programm erstellt und speichert eine Hashtabelle in der Datei "test.ser"\ im Arbeitsverzeichnis.\\
+\textbf{Erzieltes Testresultat:}\\
+Die Datei wurde erstellt und das anschließende Laden der Datei zeigt auch, dass eine Hashtabelle in ihr enthalten ist.
+\subsubsection{Testfall 2: Laden und nutzen einer Hashtabelle}
+In diesem Testfall soll eine Hashtabelle aus einer Datei geladen und interaktiv im Programm genutzt werden. Dazu wird das Programm mit den Parametern "\ -f test.ser -i"\ ausgeführt.\\
+\textbf{Programmaufruf:} java -jar AlgoProjekt.jar -f test.ser -i \\
+\textbf{Programmausgabe:}
+\begin{verbatim}
+Trying to load the hash table from "test.ser"...
+Loading ...
+The file "test.ser" was successfully loaded.
+Please choose an option:
+1 - Create a new hash table.
+2 - Load a hash table.
+3 - Save the hash table.
+4 - Look up a password in the hash table.
+5 - Generate a password and look it up in the hash table.
+6 - Test the hash table with a number of generated passwords.
+7 - Quit.
+\end{verbatim}
+Nach dem Ende der Ausgabe muss das Programm mit "6" "50000" angewiesen werden in der Hashtabelle nach 50000 zufälligen Passwörtern zu suchen.\\
+\textbf{Programmeingabe:}
+\begin{verbatim}
+6
+50000
+\end{verbatim}
+\textbf{Programmausgabe:}
+\begin{verbatim}
+Found matching password ")aQ$LU" to "axr?AK"
+The hit rate was 1 out of 50000 with 1 collisions.
+Please choose an option:
+1 - Create a new hash table.
+2 - Load a hash table.
+3 - Save the hash table.
+4 - Look up a password in the hash table.
+5 - Generate a password and look it up in the hash table.
+6 - Test the hash table with a number of generated passwords.
+7 - Quit.
+\end{verbatim}
+\textbf{Erwartetes Testresultat}\\
+Das auffinden mindestens einer Kollision und keine Ausgabe einer Fehlermeldung.\\
+\textbf{Erzieltes Testresultat}\\
+Das Auffinden einer Kollision und keine Fehlermeldung.
 \newpage
 
 \end{document}
