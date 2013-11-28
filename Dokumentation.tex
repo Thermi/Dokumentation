@@ -1,11 +1,11 @@
 % AlgoProjekt Dokumentation.
 % Geschrieben in Gummi.
 \documentclass[11pt]{article}
+\usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage[ngerman]{babel} 
-\usepackage{lmodern}
+%\usepackage{lmodern}
 \usepackage{listings}
-\lstset{language=Java}
+\lstset{language=Java, showstringspaces=false, breaklines=true, numbers=left, frame=single, basicstyle=\tiny}
 \title{\textbf{AlgoProjekt}}
 \author{Maria Markstädter\\
                 Noel Kuntze\\
@@ -58,7 +58,7 @@ ansonsten nicht.
   Im Programm werden verschiedene Algorithmen benutzt, um das Problem der Passwortgenerierung, Prüfsummenberechnung, Füllung der Hashtabelle, serialisierung und deserialisierung derselbigen zu lösen.
   \subsubsection{Passwortgenerierung}
   Der für die Passwortgenerierung genutzte Algorithmus ist dieser: 
-  \begin{lstlisting}[caption=Algorithmus zur Passwortgenerierung, label=lst:makePassword_1, basicstyle=\tiny]
+  \begin{lstlisting}[caption=Algorithmus zur Passwortgenerierung, label=lst:makePassword_1]
     public String generatePassword_1
     (String characters, int length) 
     {
@@ -97,9 +97,11 @@ Nach der For-Schleife wird das fertige Passwort als String von der Funktion zur�
 \\
 Der PRNG wird neu initialisiert, um sicherzustellen, dass er nicht in eine Schleife gerät und wiederholt die gleiche Zahlenfolge ausgibt, was zu sich wiederholenden Passwörtern führen würde
 Das Reinitialisieren kann man durch das setzen des Werts "reSeedThreshold"\ auf "0" deaktivieren.
+\pagebreak
 \subsubsection{Prüfsummenberechnung}
 Für die Prüfsummenberechnung wird dieser Algorithmus genutzt: 
-\begin{lstlisting}[caption=Algorithmus zur Prüfsummenberechnung, label=lst:makeDigest, basicstyle=\tiny]
+\begin{samepage}
+\begin{lstlisting}[caption=Algorithmus zur Prüfsummenberechnung, label=lst:makeDigest]
     public static String makeDigest(String passwd, 
     String algorithm) 
     {
@@ -148,10 +150,11 @@ Für die Prüfsummenberechnung wird dieser Algorithmus genutzt:
 
     }
 \end{lstlisting}
+\end{samepage}
 Der Funktion werden das Passwort und der zu verwendende Algorithmus in Stringform übergeben.
 Der Rückgabewert der Methode ist eine auf 32-Bit abgeschnittene Prüfsumme des Eingabestrings unter Verwendung des angegebenen Algorithmus.\\
 Zuerst werden die benötigten Variablen deklariert. Das sind zwei Byte-Arrays für die Digests, sowie ein integer als Zählvariable der Zählschleife. Desweiteren wird ein Objekt der Klasse MessageDigest benötigt, um den Hash des Passworts zu berechnen. \\
-Im nächsten Schritt wird versucht eine Instanz des Prüfsummenalgorithmus zu erstellen. Falls das fehlschlägt, wird eine entsprechende Fehlermeldung, sowie ein StackTrace ausgegeben und die Funktion liefert "null" zurück.\\
+Im nächsten Schritt wird versucht eine Instanz des Prüfsummenalgorithmus zu erstellen. Falls das fehlschlägt, wird eine entsprechende Fehlermeldung, sowie ein StackTrace ausgegeben und die Funktion liefert "null"\ zurück.\\
 Danach wird der Digest des Passworts mit "md.digest(passwd.getBytes())"\ berechnet und in einen StringBuffer geschrieben. Der StringBuffer wird benötigt, da Strings in Java nicht veränderbar sind. Das wird umgangen, indem man StringBuilder oder StringBuffer verwendet. \\
 Im darauf folgenden Schritt werden die letzten 4 Byte des Digest in ein anderes Feld kopiert, welches dann in Hexadezimalschreibweise in einen String geschrieben wird. Das ist nötig, da die Methode "get" der Hashtables und Hashmaps in Java die Methode "equals" des Eingabeobjekts benutzen, um die Eingabeobjekte mit den Objekten in der Tabelle zu vergleichen. Ein Bytearray besitzt diese Methode jedoch nicht, weshalb das Suchen in einer Hashtabelle damit nicht funktionieren würde.
 Im letzten Schritt wird der Inhalt des StringBuffers, der im Moment den Digest darstellt, in einem String umgewandelt und zurückgegeben.\\
@@ -159,7 +162,7 @@ In der Methode werden überwiegend Primitivtypen benutzt, da diese schneller anz
 
 
 \subsubsection{Speicherung}
-\begin{lstlisting}[caption=Algorithmus zur Füllung der Hashtabelle, label=lst:makeTable, basicstyle=\tiny]
+\begin{lstlisting}[caption=Algorithmus zur Füllung der Hashtabelle, label=lst:makeTable]
     public Hashtable<String, String> 
     makeTable(int amount, String legalChars, int length) {
         int i;
@@ -191,7 +194,7 @@ Danach wird eine Meldung für den Benutzer ausgegeben, wieviele Einträge erstel
 Nun wird die Tabelle mit der entsprechenden Anzahl an Digest-Passwort-Toupeln befüllt. Dazu wird die Methode makeDigest() genutzt.\\
 Für die Zeitmessung wird die Systemzeit vor und nach dem Befüllen der Tabelle festgehalten und die Differenz ermittelt. Die Differenz wird dann an den Benutzer ausgegeben. Am Ende der Methode wird die Anzahl der Einträge in der Tabelle ausgegeben. Daraus kann man die Anzahl an Hash-Kollisionen beim Befüllen der Tabelle berechnen.
 \\Der letzte Schritt ist die Rückgabe der Tabelle.
-\begin{lstlisting}[caption=Algorithmus zur Serialisierung der Hashtabelle, label=lst:serializing, basicstyle=\tiny]
+\begin{lstlisting}[caption=Algorithmus zur Serialisierung der Hashtabelle, label=lst:serializing]
     public static void serialize(Hashtable
     <String, String> table, String path) {
         System.out.println(
@@ -238,13 +241,14 @@ Für die Zeitmessung wird die Systemzeit vor und nach dem Befüllen der Tabelle 
 \end{lstlisting}
 Diese prozedur serialisiert eine gegebene Hashtabelle und speichert sie im gegebenen Pfad.\\
 Zuerst wird eine Meldung für den Benutzer ausgegeben, damit er weiß, dass der Prozess läuft und das Programm arbeitet. Dann wird eine Datei erstellt und auf mögliche Fehler überprüft. Im darauf folgenden Schritt wird versucht das Objekt in die Datei zu schreiben. Überprüfungen der Pfadangabe verhindern, dass ungültige Pfade oder Pfade zu Verzeichnissen der Prozedur übergeben werden. Diese Überprüfungen sind im Code vor dem Aufruf dieser Prozedur untergebracht. 
-\begin{lstlisting}[caption=Algorithmus zur Deserialisierung einer Datei und Einlesen einer Hashtabelle, label=lst:deserializing, basicstyle=\tiny]
+\pagebreak
+\begin{lstlisting}[caption=Algorithmus zur Deserialisierung einer Datei und Einlesen einer Hashtabelle, label=lst:deserializing]
     public static Hashtable<String, String> 
     deserialize(String filename) {
         Hashtable<String, String> table = 
         new Hashtable<String, String>();
 
-        System.out.println(
+        System.out.println(		
         "Trying to load the hash table from \"" + filename + "\"..."
         );
         FileInputStream f_in = null;
@@ -316,12 +320,7 @@ Diese Funktion liest eine Hashtabelle aus einem angegebenen Pfad ein und gibt ei
 Im Code wird versucht einen FileInputStream von der Datei zu erstellen, sodass im Folgenden ein ObjectInputStream erstellt werden kann. Danach wird die Hashtabelle mit dem ObjectInputStream aus der Datei ausgelesen. Am Ende der Funktion werden die InputStreams geschlossen. Während des gesamten Vorgangs werden Ausnahmefehler abgefangen und behandelt.
   \subsection{Programmbausteine}
   \subsubsection{Klasse Algoprojekt}
-  \textbf{Methoden in der Klasse}\\
-%  \begin{tabular}{rlr}
-%  Methodenname & Argumente & Rückgabewert & Zweck \\
-%  Main & String args\[\] & void & Hauptfunktion \\
-%  PrintHelpMessage & void & void & Gibt eine Auflistung der Programmargumente zurück \\
-%  \end{tabular}
+
   \textbf{Variablen in der Main-Funktion}\\
   \begin{tabular}{rlr}
   Variablenname & Typ & Standardwert \\
@@ -341,7 +340,7 @@ Im Code wird versucht einen FileInputStream von der Datei zu erstellen, sodass i
   Variablenname & Klasse & Standardwert \\
     loadTablePath & String & null \\
   storeTablePath & String & null \\
-  legalChars & String & (Alle Zeichen, die schnell einzugeben sind)\\
+  legalChars & String & \{A-Z,a-z,0-9,Sonderzeichen\} \\
   password & String & null \\
   amount & String & 10000000 \\
   path & String & Nicht zutreffend \\
@@ -361,8 +360,9 @@ Im Code wird versucht einen FileInputStream von der Datei zu erstellen, sodass i
   \paragraph{Zu lesende Dateien:} 
   Jede Benutzereingabe wird im Programm auf Plausabilität getestet. 
   Unter anderem werden Dateipfade auf Zugänglichkeit, sowie Lesefähigkeit und Existenz geprüft.\\
+\begin{samepage}
   \textbf{Codebeispiel}
-\begin{lstlisting}[caption=Überprüfung eines Dateipfads, label=lst:PathValidation, basicstyle=\tiny]
+\begin{lstlisting}[caption=Überprüfung eines Eingabedateipfads, label=lst:InputPathValidation]
 accepted = false;
 while (!accepted) {
 	accepted = true;
@@ -397,12 +397,40 @@ while (!accepted) {
 }
 table = deserialize(path);
 \end{lstlisting}
+\end{samepage}
+\pagebreak
+\begin{samepage}
+  \paragraph{Zu schreibende Dateien:}
+Bei zu schreibenden Dateien ist die Fehlerüberprüfung sehr eingeschränkt, da Dateioperationen nur ausgeführt werden sollten, wenn sicher ist, dass sie auch erfolgreich abgeschlossen werden können. Daher beschränken sich hier die 
+  \textbf{Codebeispiel}
+  \begin{lstlisting}[caption=Überprüfung eines Ausgabedateipfads, label=lst:OutputPathValidation]
+                          while (!accepted) {
+                            accepted = true;
+                            System.out.print("Please enter a path: ");
+                    try {
+                        path = br.readLine();
+                    } catch (IOException IOEx) {
+                        System.err.println("Sorry, couldn't read the path from the terminal!");
+                        System.err.println("Stacktrace:");
+                        IOEx.printStackTrace(System.err);
+                    }
+                            path += ".ser";
+                            pathdescriptor = new File(path);
+                            System.out.println("Saving in \"" + path + "\"");
+                            if (pathdescriptor.exists()) {
+                                System.err.println("The specified file already exists");
+                                accepted = false;
+                            }
+                        }
+                        serialize(table, path);
+  \end{lstlisting}
+  \end{samepage}
+  \pagebreak
   \subsubsection{Zahleneingaben}
-Analog werden auch Zahleneingaben des Nutzers überprüft und der Nutzer davon abgehalten Aktionen auszuführen, die im Momentanen Zustand des Programms nicht möglich sind, zum Beispiel das Suchen von Passwörtern in der Hashtable, wenn keine Hashtable geladen ist.\\
- Falls der Nutzer es trotzdem versucht, gibt das Programm eine Fehlermeldung aus und der Benutzer hat die Möglichkeit eine neue Option zu wählen.\\
-Im ausgewählten Quellcodeausschnitt sind die Optionen Vier, Fünf und Sechs nur verfügbar, wenn auch eine Tabelle
-geladen wurde, die Referenz "table\" also ungleich Null ist. Da der Zahlenraum der verfügbaren Optionen im Bereich zwischen eins und 7 ist, werden nur Zahlen größer Null und kleiner gleich Sieben akzeptiert.\\
-\begin{lstlisting}[caption=Überprüfung von Zahlen label=lst:checkIntegers, basicstyle=\tiny]
+Analog werden auch Zahleneingaben des Nutzers überprüft und der Nutzer davon abgehalten Aktionen auszuführen, die im Momentanen Zustand des Programms nicht möglich sind, zum Beispiel das Suchen von Passwörtern in der Hashtable, wenn keine Hashtable geladen ist.
+ Falls der Nutzer es trotzdem versucht, gibt das Programm eine Fehlermeldung aus und der Benutzer hat die Möglichkeit eine neue Option zu wählen.
+Im ausgewählten Quellcodeausschnitt sind die Optionen Vier, Fünf und Sechs nur verfügbar, wenn auch eine Tabelle geladen wurde, die Referenz "table\"\ also ungleich Null ist. Da der Zahlenraum der verfügbaren Optionen im Bereich zwischen eins und 7 ist, werden nur Zahlen größer Null und kleiner gleich Sieben akzeptiert.\\
+\begin{lstlisting}[caption=Überprüfung von Zahlen, label=lst:checkIntegers]
 while (wrong_option || !isInteger || value == 0) {
   /* We try to read a line from the buffered reader. */
 	try {
@@ -455,7 +483,7 @@ while (wrong_option || !isInteger || value == 0) {
 Bei Zahlenparametern muss direkt bei der Verarbeitung geprüft werden, ob der angegebene Parameterwert auch als Zahl interpretierbar ist.\\
 Bei allen Parametertypen, außer Switches, ist es nötig die Zählvariable zu inkrementieren, denn sonst würde beim nächsten Durchlauf der FOR-Schleife versucht werden, den Parameterwert als Parameter zu interpretieren.
 Die Beispiele für diese verschiedenen Typen sind hier der Fall "\---file" für Eingabedateiparameter, der Fall "\--output" für Ausgabedateiparameter, der Fall "\---generate" für Switches, sowie der Fall "\---number" für Zahlenvariablen.
-\begin{lstlisting}[caption=Überprüfung der Programmparameter, label=lst:checkParameter, basicstyle=\tiny]
+\begin{lstlisting}[caption=Überprüfung der Programmparameter, label=lst:checkParameter]
 for (i = 0; i < args.length; i++) {
 	switch (args[i]) {
 	
