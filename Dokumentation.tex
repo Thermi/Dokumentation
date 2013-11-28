@@ -238,7 +238,7 @@ Für die Zeitmessung wird die Systemzeit vor und nach dem Befüllen der Tabelle 
 \end{lstlisting}
 Diese prozedur serialisiert eine gegebene Hashtabelle und speichert sie im gegebenen Pfad.\\
 Zuerst wird eine Meldung für den Benutzer ausgegeben, damit er weiß, dass der Prozess läuft und das Programm arbeitet. Dann wird eine Datei erstellt und auf mögliche Fehler überprüft. Im darauf folgenden Schritt wird versucht das Objekt in die Datei zu schreiben. Überprüfungen der Pfadangabe verhindern, dass ungültige Pfade oder Pfade zu Verzeichnissen der Prozedur übergeben werden. Diese Überprüfungen sind im Code vor dem Aufruf dieser Prozedur untergebracht. 
-\begin{lstlisting}[caption=Algorithmus zur Deserialisierung einer Datei und Einlesen einer Hashtabelle, label=lst:deserializing]
+\begin{lstlisting}[caption=Algorithmus zur Deserialisierung einer Datei und Einlesen einer Hashtabelle, label=lst:deserializing, basicstyle=\tiny]
     public static Hashtable<String, String> 
     deserialize(String filename) {
         Hashtable<String, String> table = 
@@ -596,6 +596,7 @@ Die Datei wurde erstellt und das anschließende Laden der Datei zeigt auch, dass
 \subsubsection{Testfall 2: Laden und nutzen einer Hashtabelle}
 In diesem Testfall soll eine Hashtabelle aus einer Datei geladen und interaktiv im Programm genutzt werden. Dazu wird das Programm mit den Parametern "\ -f test.ser -i"\ ausgeführt.\\
 \textbf{Programmaufruf:} java -jar AlgoProjekt.jar -f test.ser -i \\
+\begin{samepage}
 \textbf{Programmausgabe:}
 \begin{verbatim}
 Trying to load the hash table from "test.ser"...
@@ -610,9 +611,12 @@ Please choose an option:
 6 - Test the hash table with a number of generated passwords.
 7 - Quit.
 \end{verbatim}
+\end{samepage}
+\begin{samepage}
 Nach dem Ende der Ausgabe muss das Programm mit \begin{verbatim}4 
 axr?AK 
-\end{verbatim} angewiesen werden in der Hashtabelle nach dem Digest des Strings axr?AK zu suchen\\
+\end{verbatim} 
+angewiesen werden in der Hashtabelle nach dem Digest des Strings axr?AK zu suchen\\
 \textbf{Programmeingabe:}
 \begin{verbatim}
 4
@@ -632,6 +636,7 @@ Please choose an option:
 6 - Test the hash table with a number of generated passwords.
 7 - Quit.
 \end{verbatim}
+\end{samepage}
 \textbf{Erwartetes Testresultat}\\
 Das auffinden einer Kollision und keine Ausgabe einer Fehlermeldung.\\
 \textbf{Erzieltes Testresultat}\\
