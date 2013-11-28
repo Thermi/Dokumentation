@@ -58,7 +58,7 @@ ansonsten nicht.
   Im Programm werden verschiedene Algorithmen benutzt, um das Problem der Passwortgenerierung, Prüfsummenberechnung, Füllung der Hashtabelle, serialisierung und deserialisierung derselbigen zu lösen.
   \subsubsection{Passwortgenerierung}
   Der für die Passwortgenerierung genutzte Algorithmus ist dieser: 
-  \begin{lstlisting}[caption=Algorithmus zur Passwortgenerierung, label=lst:Java]
+  \begin{lstlisting}[caption=Algorithmus zur Passwortgenerierung, label=lst:makePassword_1, basicstyle=\tiny]
     public String generatePassword_1
     (String characters, int length) 
     {
@@ -99,7 +99,7 @@ Der PRNG wird neu initialisiert, um sicherzustellen, dass er nicht in eine Schle
 Das Reinitialisieren kann man durch das setzen des Werts "reSeedThreshold"\ auf "0" deaktivieren.
 \subsubsection{Prüfsummenberechnung}
 Für die Prüfsummenberechnung wird dieser Algorithmus genutzt: 
-\begin{lstlisting}[caption=Algorithmus zur Prüfsummenberechnung, label=lst:makeDigest]
+\begin{lstlisting}[caption=Algorithmus zur Prüfsummenberechnung, label=lst:makeDigest, basicstyle=\tiny]
     public static String makeDigest(String passwd, 
     String algorithm) 
     {
@@ -159,7 +159,7 @@ In der Methode werden überwiegend Primitivtypen benutzt, da diese schneller anz
 
 
 \subsubsection{Speicherung}
-\begin{lstlisting}[caption=Algorithmus zur Füllung der Hashtabelle, label=lst:makeTable]
+\begin{lstlisting}[caption=Algorithmus zur Füllung der Hashtabelle, label=lst:makeTable, basicstyle=\tiny]
     public Hashtable<String, String> 
     makeTable(int amount, String legalChars, int length) {
         int i;
@@ -191,7 +191,7 @@ Danach wird eine Meldung für den Benutzer ausgegeben, wieviele Einträge erstel
 Nun wird die Tabelle mit der entsprechenden Anzahl an Digest-Passwort-Toupeln befüllt. Dazu wird die Methode makeDigest() genutzt.\\
 Für die Zeitmessung wird die Systemzeit vor und nach dem Befüllen der Tabelle festgehalten und die Differenz ermittelt. Die Differenz wird dann an den Benutzer ausgegeben. Am Ende der Methode wird die Anzahl der Einträge in der Tabelle ausgegeben. Daraus kann man die Anzahl an Hash-Kollisionen beim Befüllen der Tabelle berechnen.
 \\Der letzte Schritt ist die Rückgabe der Tabelle.
-\begin{lstlisting}[caption=Algorithmus zur Serialisierung der Hashtabelle, label=lst:serializing]
+\begin{lstlisting}[caption=Algorithmus zur Serialisierung der Hashtabelle, label=lst:serializing, basicstyle=\tiny]
     public static void serialize(Hashtable
     <String, String> table, String path) {
         System.out.println(
@@ -260,8 +260,8 @@ Zuerst wird eine Meldung für den Benutzer ausgegeben, damit er weiß, dass der 
             obj_in = new ObjectInputStream(f_in);
         } catch (IOException ex) {
             System.out.println(
-            "Couldn't create the ObjectInputStream " +"
-            needed to load the Object from the file!"
+            "Couldn't create the ObjectInputStream " +
+            "needed to load the Object from the file!"
             );
             return null;
         }
@@ -311,6 +311,7 @@ Zuerst wird eine Meldung für den Benutzer ausgegeben, damit er weiß, dass der 
         return table;
     }
 \end{lstlisting}
+
 Diese Funktion liest eine Hashtabelle aus einem angegebenen Pfad ein und gibt eine Referenz zum eingelesenen Objekt zurück.\\
 Im Code wird versucht einen FileInputStream von der Datei zu erstellen, sodass im Folgenden ein ObjectInputStream erstellt werden kann. Danach wird die Hashtabelle mit dem ObjectInputStream aus der Datei ausgelesen. Am Ende der Funktion werden die InputStreams geschlossen. Während des gesamten Vorgangs werden Ausnahmefehler abgefangen und behandelt.
   \subsection{Programmbausteine}
@@ -327,19 +328,227 @@ Im Code wird versucht einen FileInputStream von der Datei zu erstellen, sodass i
   length & int & 6 \\
   reSeed & int & 150000 \\
   i & int & nicht initialisiert \\
+  value & int & nicht initialisiert \\
   generateOnly & boolean & false \\
   interactive & boolean & false \\
+  isInteger & boolean & false \\
+  wrong\_option & boolean & true \\
+  accepted & boolean & false \\
+  
   \end{tabular}\\
   \textbf{Objekte in der Main-Funktion}\\
   \begin{tabular}{rlr}
   Variablenname & Klasse & Standardwert \\
     loadTablePath & String & null \\
   storeTablePath & String & null \\
-  legalChars & String & (Alle Groß-, Kleinbuchstaben, Ziffern, Sonderzeichen)\\
+  legalChars & String & (Alle Zeichen, die schnell einzugeben sind)\\
   password & String & null \\
   amount & String & 10000000 \\
-  path & String & null \\
+  path & String & Nicht zutreffend \\
+  option & String & null \\
+  result & String & null \\
+  pathdescriptor & File & Nicht zutreffend\\
+  Ne & NumberFormatException & Nicht zutreffend \\
+  IOEx & IOException & Nicht zutreffend \\
+  phase & PrecomputationPhase & Nicht zutreffend \\
+  table & Hashtable String, String & Nicht zutreffend \\
+  isr & InputStreamReader & Nicht zutreffend \\
+  br & BufferedReader & Nicht zutreffend \\
+  
   \end{tabular}
+  \subsection{Fehlerbehandlung}
+  \subsubsection{Dateipfade}
+  \paragraph{Zu lesende Dateien:} 
+  Jede Benutzereingabe wird im Programm auf Plausabilität getestet. 
+  Unter anderem werden Dateipfade auf Zugänglichkeit, sowie Lesefähigkeit und Existenz geprüft.\\
+  \textbf{Codebeispiel}
+\begin{lstlisting}[caption=Überprüfung eines Dateipfads, label=lst:PathValidation, basicstyle=\tiny]
+accepted = false;
+while (!accepted) {
+	accepted = true;
+    System.out.println("Please enter the path to the file: ");
+    try {
+    path = br.readLine();
+    } catch (IOException IOex) {
+    	System.err.println(
+    	"Sorry, couldn't read the path" + 
+    	" from the terminal!\n"
+    	);
+    	System.err.println("Stacktrace:");
+    	IOex.printStackTrace(System.err);
+    	return;
+    }
+    pathdescriptor = new File(path);
+    if (!pathdescriptor.exists()) {
+    	System.err.println(
+    	"The specified file doesn't exist!"
+    	);
+    	accepted = false;
+    }
+    if (!pathdescriptor.canRead()) {
+		System.err.println("The specified file can't be read!");
+    }
+    if (!pathdescriptor.isFile()) {
+    	System.err.println(
+    	"The specified path doesn't point to a file!"
+    	);
+     	accepted = false;
+     }
+}
+table = deserialize(path);
+\end{lstlisting}
+  \subsubsection{Zahleneingaben}
+Analog werden auch Zahleneingaben des Nutzers überprüft und der Nutzer davon abgehalten Aktionen auszuführen, die im Momentanen Zustand des Programms nicht möglich sind, zum Beispiel das Suchen von Passwörtern in der Hashtable, wenn keine Hashtable geladen ist.\\
+ Falls der Nutzer es trotzdem versucht, gibt das Programm eine Fehlermeldung aus und der Benutzer hat die Möglichkeit eine neue Option zu wählen.\\
+Im ausgewählten Quellcodeausschnitt sind die Optionen Vier, Fünf und Sechs nur verfügbar, wenn auch eine Tabelle
+geladen wurde, die Referenz "table\" also ungleich Null ist. Da der Zahlenraum der verfügbaren Optionen im Bereich zwischen eins und 7 ist, werden nur Zahlen größer Null und kleiner gleich Sieben akzeptiert.\\
+\begin{lstlisting}[caption=Überprüfung von Zahlen label=lst:checkIntegers, basicstyle=\tiny]
+while (wrong_option || !isInteger || value == 0) {
+  /* We try to read a line from the buffered reader. */
+	try {
+		option = br.readLine();
+	} catch (IOException ex) {
+		System.err.println(
+		"We couldn't read from the terminal. Sorry :("
+		);
+		System.err.println("Stacktrace:");
+		ex.getStackTrace();
+		return;
+	}
+    /* We try to  parse the input line as an integer */
+    try {
+    	value = Integer.parseInt(option);
+    } catch (NumberFormatException NFe) {
+    	System.err.println("Please enter a valid integer.");
+        isInteger = false;
+    } finally {
+		/* We check for the range of options, 
+		 * so you can't enter -1 or 8. 
+		 */
+		if (value > 0 && value <= 7) {
+			isInteger = true;
+    	}
+   	}
+   /* This checks if the value chosen 
+    * from the user is applicable to 
+    * the current state of the program.
+    * E.g.: Whether a hashtable was loaded or not 
+    */
+    if ((value == 3 || value == 4 || value == 5 || value == 6) 
+    && table == null) {
+    	System.err.println(
+    	"Load a hash table before you try to use those!"
+    	);
+    	wrong_option = true;
+	} else {
+    	wrong_option = false;
+    }
+}
+  \end{lstlisting}
+  \subsubsection{Programmparameter}
+  Da dem Programm Parameter übergeben werden können ist es wichtig, diese auch zu überprüfen, um ein Fehlverhalten des Programms auszuschließen. Das Programm versteht Parameter, die Pfade sind, als auch Zahlen
+  , Zeichenketten und einfache Switches, daher existieren auch verschiedene Wege diese zu überprüfen.
+  Um den Codeausschnitt nicht unnötig aufzublähen, wurde nur jeweils ein Parameter jeden Typs ausgewählt.
+  Im Codeausschnitt werden die Parameter in einer FOR-Schleife verarbeitet.\\
+  Bei Eingabedateiparametern sollte beim Programmstart bereits überprüft werden, ob die Zieldatei existiert, lesbar ist und nicht ein Verzeichnis o.Ä. ist. Das wird in der Verarbeitung des Parameters "\---file" deutlich.\\
+ Für Ausgabedateiparameter kann zum Zeitpunkt der Parameterprüfung nur überprüft werden, ob eine solche Datei bereits existiert. Andere Überprüfungen würden eigentliche Schreiboperationen und das Anlegen einer Datei benötigen, was jedoch zu diesem frühen Zeitpunkt zu vermeiden ist.\\
+Bei Zahlenparametern muss direkt bei der Verarbeitung geprüft werden, ob der angegebene Parameterwert auch als Zahl interpretierbar ist.\\
+Bei allen Parametertypen, außer Switches, ist es nötig die Zählvariable zu inkrementieren, denn sonst würde beim nächsten Durchlauf der FOR-Schleife versucht werden, den Parameterwert als Parameter zu interpretieren.
+Die Beispiele für diese verschiedenen Typen sind hier der Fall "\---file" für Eingabedateiparameter, der Fall "\--output" für Ausgabedateiparameter, der Fall "\---generate" für Switches, sowie der Fall "\---number" für Zahlenvariablen.
+\begin{lstlisting}[caption=Überprüfung der Programmparameter, label=lst:checkParameter, basicstyle=\tiny]
+for (i = 0; i < args.length; i++) {
+	switch (args[i]) {
+	
+		case "--help":
+			printHelpMessage();
+			return;
+			
+   	case "--file":
+		if (i < args.length - 1) {
+   	 		String path = args[i + 1];
+	  	  	File pathdescriptor = new File(path);
+    		if (!pathdescriptor.exists()) {
+    			System.out.println(
+    			"The specified file for the --file option doesn't exist!"
+    			);
+				return;
+			}
+			if (!pathdescriptor.canRead()) {
+				System.out.println(
+				"The specified file for the --file option can't be read!"
+				);
+				return;
+			}
+			if (!pathdescriptor.isFile()) {
+				System.out.println(
+				"The specified path doesn't point to a file!"
+				);
+				return;
+			}
+ 				loadTablePath = path;
+				i++;
+		} else {
+				System.out.println(
+				"Using the --file option requires a file after it!"
+				);
+				return;
+			}
+		break;
+
+
+	case "--output":
+	
+    if (i < args.length - 1) {
+    	String path = args[i + 1];
+    	File pathdescriptor = new File(path + ".ser");
+    	System.out.println("Saving in \"" + path + "\"");
+    	if (pathdescriptor.exists()) {
+    		System.out.println(
+    		"The specified file for the --output option already exists!"
+    		);
+    		return;
+    	}
+    	storeTablePath = path;
+        i++;
+        } else {
+        System.out.println("Using the --output option requires a file after it!");
+		return;
+		}
+		break;
+
+	case "--generate":
+		generateOnly = true;
+		break;
+		
+	case "--number":
+		if (i < args.length - 1) {
+			try {
+				amount = Integer.parseInt(args[i + 1]);
+				} catch (NumberFormatException Ne) {
+					System.err.println(
+					"Using the --number option requires an integer after it!"
+					);
+					return;
+                } finally {
+                	i++;
+                	}
+                	
+		} else {
+			System.err.println(
+			"Using the --number option requires an integer after it!"
+			);
+			return;
+		}
+		break;
+	default:
+		System.err.println(
+		"Option " + args[i] + " isn't known!"
+		);
+        return;
+	}
+}
+\end{lstlisting}
+
   \subsection{Programmstruktur}
   \section{Programmablauf}
   
