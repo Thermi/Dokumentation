@@ -361,7 +361,7 @@ Die Entwicklungsumgebung wird genutzt, um das Programm mit verschiedenen Paramet
     \begin{verbatim}
 Saving in "test.ser"
 Generating 10000000 hash table entries ...
-Generating the hash table entries took 5784 ms.
+Generating the hash table entries took 5784.0 ms.
 The table now holds 9877523 entries.
 Please wait while the file is being created.
     \end{verbatim}
@@ -401,16 +401,19 @@ Please choose an option:
 6 - Test the hash table with a number of generated passwords.
 7 - Quit.
 \end{verbatim}
-Nach dem Ende der Ausgabe muss das Programm mit "6" "50000" angewiesen werden in der Hashtabelle nach 50000 zufälligen Passwörtern zu suchen.\\
+Nach dem Ende der Ausgabe muss das Programm mit \begin{verbatim}4 
+axr?AK 
+\end{verbatim} angewiesen werden in der Hashtabelle nach dem Digest des Strings axr?AK zu suchen\\
 \textbf{Programmeingabe:}
 \begin{verbatim}
-6
-50000
+4
+axr?AK
 \end{verbatim}
 \textbf{Programmausgabe:}
 \begin{verbatim}
-Found matching password ")aQ$LU" to "axr?AK"
-The hit rate was 1 out of 50000 with 1 collisions.
+Enter a password:
+axr?AK
+A password with the same hash value has been found: )aQ$LU
 Please choose an option:
 1 - Create a new hash table.
 2 - Load a hash table.
@@ -421,7 +424,7 @@ Please choose an option:
 7 - Quit.
 \end{verbatim}
 \textbf{Erwartetes Testresultat}\\
-Das auffinden mindestens einer Kollision und keine Ausgabe einer Fehlermeldung.\\
+Das auffinden einer Kollision und keine Ausgabe einer Fehlermeldung.\\
 \textbf{Erzieltes Testresultat}\\
 Das Auffinden einer Kollision und keine Fehlermeldung.
 \newpage
