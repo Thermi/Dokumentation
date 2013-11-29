@@ -3,6 +3,7 @@
 \documentclass[11pt]{article}
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage{graphicx}   
 %\usepackage{lmodern}
 \usepackage{listings}
 \lstset{language=Java, showstringspaces=false, breaklines=true, numbers=left, frame=single, basicstyle=\tiny}
@@ -28,7 +29,7 @@ Precomputation-Phase: Es werden Passwort und Message Digest berechnet und in ein
 Online-Phase: Der gesniffte Message Digest wird mit der zuvor berechneten Hashtable verglichen und so das dazugehörige Passwort herausgelesen. 
 Es gilt mehrere Module zu Programmieren, die zum einen eine Hashtable erzeugen in der Passwort und Message Digest berechnet werden sowie in einer Hashtable einen zuvor gesnifften Message Digest nachschlagen und das dazugehörige Passwort ausgeben. Dies wird durch Interface unterstützt die es dem Benutzer ermöglicht einzelne Phasen anzuwählen und erstellte Hashtables zu speichern oder zu laden.
 
-  \subsection{Programmkenndaten}
+   
   \subsubsection{Programmidentifizierung}
   \paragraph{Programmname}
   AlgoProjekt
@@ -38,9 +39,9 @@ Es gilt mehrere Module zu Programmieren, die zum einen eine Hashtable erzeugen i
   Version 1.0
   \paragraph{Freigabedatum}
   \date{26.11.2013}
-  \section{Programmfunktion}
-  dsdsads
-  \subsection{Aufgabenstellung}
+  \newline
+  \newline
+ \subsection{Aufgabenstellung}
   Wir wollen ein einfaches, passwortbasiertes Zugangssystem angreifen. Das Zugangssystem
 funktioniert wie folgt:
 \begin{itemize} 
@@ -50,12 +51,16 @@ gehasht. Verwendet werden allerdings nur die letzten 4 Byte.
 \item Das Terminal sendet diesen sogenannten Message Digest zum Authentifikationsser-
 ver. Dieser vergleicht den erhaltenen Message Digest mit dem Wert, den er für die-
 sen Nutzer gespeichert hat. Sind die beiden identisch, wird der Zugang freigegeben,
-ansonsten nicht.
+ansonsten nicht. 
 \end{itemize}
-  \subsection{Theoretische Grundlagen}
-  \subsection{Funktionshierarchie}
+ 
+  \begin{figure}
+  \includegraphics[width=1.2\textwidth]{neu0} 
+  \caption{Klassenaufbau} 
+  \end{figure} 
   \subsection{Methoden/Algorithmen}
   Im Programm werden verschiedene Algorithmen benutzt, um das Problem der Passwortgenerierung, Prüfsummenberechnung, Füllung der Hashtabelle, serialisierung und deserialisierung derselbigen zu lösen.
+  \newline
   \subsubsection{Passwortgenerierung}
   Der für die Passwortgenerierung genutzte Algorithmus ist dieser: 
   \begin{lstlisting}[caption=Algorithmus zur Passwortgenerierung, label=lst:makePassword_1]
@@ -248,7 +253,7 @@ Zuerst wird eine Meldung für den Benutzer ausgegeben, damit er weiß, dass der 
         Hashtable<String, String> table = 
         new Hashtable<String, String>();
 
-        System.out.println(		
+        System.out.println(                
         "Trying to load the hash table from \"" + filename + "\"..."
         );
         FileInputStream f_in = null;
@@ -365,34 +370,34 @@ Im Code wird versucht einen FileInputStream von der Datei zu erstellen, sodass i
 \begin{lstlisting}[caption=Überprüfung eines Eingabedateipfads, label=lst:InputPathValidation]
 accepted = false;
 while (!accepted) {
-	accepted = true;
+        accepted = true;
     System.out.println("Please enter the path to the file: ");
     try {
     path = br.readLine();
     } catch (IOException IOex) {
-    	System.err.println(
-    	"Sorry, couldn't read the path" + 
-    	" from the terminal!\n"
-    	);
-    	System.err.println("Stacktrace:");
-    	IOex.printStackTrace(System.err);
-    	return;
+            System.err.println(
+            "Sorry, couldn't read the path" + 
+            " from the terminal!\n"
+            );
+            System.err.println("Stacktrace:");
+            IOex.printStackTrace(System.err);
+            return;
     }
     pathdescriptor = new File(path);
     if (!pathdescriptor.exists()) {
-    	System.err.println(
-    	"The specified file doesn't exist!"
-    	);
-    	accepted = false;
+            System.err.println(
+            "The specified file doesn't exist!"
+            );
+            accepted = false;
     }
     if (!pathdescriptor.canRead()) {
-		System.err.println("The specified file can't be read!");
+                System.err.println("The specified file can't be read!");
     }
     if (!pathdescriptor.isFile()) {
-    	System.err.println(
-    	"The specified path doesn't point to a file!"
-    	);
-     	accepted = false;
+            System.err.println(
+            "The specified path doesn't point to a file!"
+            );
+             accepted = false;
      }
 }
 table = deserialize(path);
@@ -433,30 +438,30 @@ Im ausgewählten Quellcodeausschnitt sind die Optionen Vier, Fünf und Sechs nur
 \begin{lstlisting}[caption=Überprüfung von Zahlen, label=lst:checkIntegers]
 while (wrong_option || !isInteger || value == 0) {
   /* We try to read a line from the buffered reader. */
-	try {
-		option = br.readLine();
-	} catch (IOException ex) {
-		System.err.println(
-		"We couldn't read from the terminal. Sorry :("
-		);
-		System.err.println("Stacktrace:");
-		ex.getStackTrace();
-		return;
-	}
+        try {
+                option = br.readLine();
+        } catch (IOException ex) {
+                System.err.println(
+                "We couldn't read from the terminal. Sorry :("
+                );
+                System.err.println("Stacktrace:");
+                ex.getStackTrace();
+                return;
+        }
     /* We try to  parse the input line as an integer */
     try {
-    	value = Integer.parseInt(option);
+            value = Integer.parseInt(option);
     } catch (NumberFormatException NFe) {
-    	System.err.println("Please enter a valid integer.");
+            System.err.println("Please enter a valid integer.");
         isInteger = false;
     } finally {
-		/* We check for the range of options, 
-		 * so you can't enter -1 or 8. 
-		 */
-		if (value > 0 && value <= 7) {
-			isInteger = true;
-    	}
-   	}
+                /* We check for the range of options, 
+                 * so you can't enter -1 or 8. 
+                 */
+                if (value > 0 && value <= 7) {
+                        isInteger = true;
+            }
+           }
    /* This checks if the value chosen 
     * from the user is applicable to 
     * the current state of the program.
@@ -464,12 +469,12 @@ while (wrong_option || !isInteger || value == 0) {
     */
     if ((value == 3 || value == 4 || value == 5 || value == 6) 
     && table == null) {
-    	System.err.println(
-    	"Load a hash table before you try to use those!"
-    	);
-    	wrong_option = true;
-	} else {
-    	wrong_option = false;
+            System.err.println(
+            "Load a hash table before you try to use those!"
+            );
+            wrong_option = true;
+        } else {
+            wrong_option = false;
     }
 }
   \end{lstlisting}
@@ -485,104 +490,97 @@ Bei allen Parametertypen, außer Switches, ist es nötig die Zählvariable zu in
 Die Beispiele für diese verschiedenen Typen sind hier der Fall "\---file" für Eingabedateiparameter, der Fall "\--output" für Ausgabedateiparameter, der Fall "\---generate" für Switches, sowie der Fall "\---number" für Zahlenvariablen.
 \begin{lstlisting}[caption=Überprüfung der Programmparameter, label=lst:checkParameter]
 for (i = 0; i < args.length; i++) {
-	switch (args[i]) {
-	
-		case "--help":
-			printHelpMessage();
-			return;
-			
-   	case "--file":
-		if (i < args.length - 1) {
-   	 		String path = args[i + 1];
-	  	  	File pathdescriptor = new File(path);
-    		if (!pathdescriptor.exists()) {
-    			System.out.println(
-    			"The specified file for the --file option doesn't exist!"
-    			);
-				return;
-			}
-			if (!pathdescriptor.canRead()) {
-				System.out.println(
-				"The specified file for the --file option can't be read!"
-				);
-				return;
-			}
-			if (!pathdescriptor.isFile()) {
-				System.out.println(
-				"The specified path doesn't point to a file!"
-				);
-				return;
-			}
- 				loadTablePath = path;
-				i++;
-		} else {
-				System.out.println(
-				"Using the --file option requires a file after it!"
-				);
-				return;
-			}
-		break;
+        switch (args[i]) {
+        
+                case "--help":
+                        printHelpMessage();
+                        return;
+                        
+           case "--file":
+                if (i < args.length - 1) {
+                            String path = args[i + 1];
+                            File pathdescriptor = new File(path);
+                    if (!pathdescriptor.exists()) {
+                            System.out.println(
+                            "The specified file for the --file option doesn't exist!"
+                            );
+                                return;
+                        }
+                        if (!pathdescriptor.canRead()) {
+                                System.out.println(
+                                "The specified file for the --file option can't be read!"
+                                );
+                                return;
+                        }
+                        if (!pathdescriptor.isFile()) {
+                                System.out.println(
+                                "The specified path doesn't point to a file!"
+                                );
+                                return;
+                        }
+                                 loadTablePath = path;
+                                i++;
+                } else {
+                                System.out.println(
+                                "Using the --file option requires a file after it!"
+                                );
+                                return;
+                        }
+                break;
 
 
-	case "--output":
-	
+        case "--output":
+        
     if (i < args.length - 1) {
-    	String path = args[i + 1];
-    	File pathdescriptor = new File(path + ".ser");
-    	System.out.println("Saving in \"" + path + "\"");
-    	if (pathdescriptor.exists()) {
-    		System.out.println(
-    		"The specified file for the --output option already exists!"
-    		);
-    		return;
-    	}
-    	storeTablePath = path;
+            String path = args[i + 1];
+            File pathdescriptor = new File(path + ".ser");
+            System.out.println("Saving in \"" + path + "\"");
+            if (pathdescriptor.exists()) {
+                    System.out.println(
+                    "The specified file for the --output option already exists!"
+                    );
+                    return;
+            }
+            storeTablePath = path;
         i++;
         } else {
         System.out.println("Using the --output option requires a file after it!");
-		return;
-		}
-		break;
+                return;
+                }
+                break;
 
-	case "--generate":
-		generateOnly = true;
-		break;
-		
-	case "--number":
-		if (i < args.length - 1) {
-			try {
-				amount = Integer.parseInt(args[i + 1]);
-				} catch (NumberFormatException Ne) {
-					System.err.println(
-					"Using the --number option requires an integer after it!"
-					);
-					return;
+        case "--generate":
+                generateOnly = true;
+                break;
+                
+        case "--number":
+                if (i < args.length - 1) {
+                        try {
+                                amount = Integer.parseInt(args[i + 1]);
+                                } catch (NumberFormatException Ne) {
+                                        System.err.println(
+                                        "Using the --number option requires an integer after it!"
+                                        );
+                                        return;
                 } finally {
-                	i++;
-                	}
-                	
-		} else {
-			System.err.println(
-			"Using the --number option requires an integer after it!"
-			);
-			return;
-		}
-		break;
-	default:
-		System.err.println(
-		"Option " + args[i] + " isn't known!"
-		);
+                        i++;
+                        }
+                        
+                } else {
+                        System.err.println(
+                        "Using the --number option requires an integer after it!"
+                        );
+                        return;
+                }
+                break;
+        default:
+                System.err.println(
+                "Option " + args[i] + " isn't known!"
+                );
         return;
-	}
+        }
 }
 \end{lstlisting}
-
-  \subsection{Programmstruktur}
-  \section{Programmablauf}
-  
-  \subsection{Programmablaufbeschreibung} 
-  \subsection{Funktionshierarchie}
-  \subsection{Methoden/Algorithmen}
   
    \section{Programmtest}
   \subsection{Testziele}
@@ -606,18 +604,18 @@ Please wait while the file is being created.
     Hierzu wird die Datei mit dem Programm geladen. Siehe Test 2.\\
     \textbf{Programmaufruf:}
     "java -jar AlgoProjekt.jar -f test.ser"\\
- 	\textbf{Programmausgabe:}
- 	\begin{verbatim}
+         \textbf{Programmausgabe:}
+         \begin{verbatim}
 Trying to load the hash table from "test.ser"...
 Loading ...
 The file "test.ser" was successfully loaded.
 Please enter the password you want to search for: 
 asfasf
 Sorry, no matching entry in the table.
- 	\end{verbatim}
- 	Nach der Zeile "Please enter the password you want to search for:"\
- 	muss ein String eingegeben werden, damit das Programm weiterläuft.\\
- 	\textbf{Erwartetes Testresultat:}\\
+         \end{verbatim}
+         Nach der Zeile "Please enter the password you want to search for:"\
+         muss ein String eingegeben werden, damit das Programm weiterläuft.\\
+         \textbf{Erwartetes Testresultat:}\\
 Das Programm erstellt und speichert eine Hashtabelle in der Datei "test.ser"\ im Arbeitsverzeichnis.\\
 \textbf{Erzieltes Testresultat:}\\
 Die Datei wurde erstellt und das anschließende Laden der Datei zeigt auch, dass eine Hashtabelle in ihr enthalten ist.
@@ -651,7 +649,7 @@ angewiesen werden in der Hashtabelle nach dem Digest des Strings axr?AK zu suche
 axr?AK
 \end{verbatim}
 \textbf{Programmausgabe:}
-\begin{verbatim}
+\begin{verbatim} 
 Enter a password:
 axr?AK
 A password with the same hash value has been found: )aQ$LU
