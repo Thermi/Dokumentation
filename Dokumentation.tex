@@ -4,8 +4,11 @@
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}   
-%\usepackage{lmodern}
+\usepackage{lmodern}
 \usepackage{listings}
+\usepackage{graphics}
+\usepackage{float} 
+\floatplacement{figure}{H}
 \lstset{language=Java, showstringspaces=false, breaklines=true, numbers=left, frame=single, basicstyle=\tiny}
 \title{\textbf{AlgoProjekt}}
 \author{Maria Markstädter\\
@@ -15,6 +18,7 @@
 \begin{document} 
 
 \maketitle
+
 \newpage
 \tableofcontents
 \newpage
@@ -53,14 +57,17 @@ ver. Dieser vergleicht den erhaltenen Message Digest mit dem Wert, den er für d
 sen Nutzer gespeichert hat. Sind die beiden identisch, wird der Zugang freigegeben,
 ansonsten nicht. 
 \end{itemize}
- 
+\subsection{Funktionshierachie}
   \begin{figure}
-  \includegraphics[width=1.2\textwidth]{neu0} 
+  \centering
+  \includegraphics[width=\textwidth, clip]{Bild.pdf} 
   \caption{Klassenaufbau} 
   \end{figure} 
-  \subsection{Methoden/Algorithmen}
+  \subsubsection{Methoden/Algorithmen}
   Im Programm werden verschiedene Algorithmen benutzt, um das Problem der Passwortgenerierung, Prüfsummenberechnung, Füllung der Hashtabelle, serialisierung und deserialisierung derselbigen zu lösen.
   \newline
+  \pagebreak
+  \begin{samepage}
   \subsubsection{Passwortgenerierung}
   Der für die Passwortgenerierung genutzte Algorithmus ist dieser: 
   \begin{lstlisting}[caption=Algorithmus zur Passwortgenerierung, label=lst:makePassword_1]
@@ -73,7 +80,7 @@ ansonsten nicht.
             if (reSeedThreshold > 0 && 
             counter == reSeedThreshold) 
             {
-                this.reSeed();
+                this.reSeed();\centering
                 counter = 0;
             }
             text[i] = characters.charAt
@@ -102,7 +109,7 @@ Nach der For-Schleife wird das fertige Passwort als String von der Funktion zur�
 \\
 Der PRNG wird neu initialisiert, um sicherzustellen, dass er nicht in eine Schleife gerät und wiederholt die gleiche Zahlenfolge ausgibt, was zu sich wiederholenden Passwörtern führen würde
 Das Reinitialisieren kann man durch das setzen des Werts "reSeedThreshold"\ auf "0" deaktivieren.
-\pagebreak
+\end{samepage}
 \subsubsection{Prüfsummenberechnung}
 Für die Prüfsummenberechnung wird dieser Algorithmus genutzt: 
 \begin{samepage}
@@ -161,7 +168,7 @@ Der Rückgabewert der Methode ist eine auf 32-Bit abgeschnittene Prüfsumme des 
 Zuerst werden die benötigten Variablen deklariert. Das sind zwei Byte-Arrays für die Digests, sowie ein integer als Zählvariable der Zählschleife. Desweiteren wird ein Objekt der Klasse MessageDigest benötigt, um den Hash des Passworts zu berechnen. \\
 Im nächsten Schritt wird versucht eine Instanz des Prüfsummenalgorithmus zu erstellen. Falls das fehlschlägt, wird eine entsprechende Fehlermeldung, sowie ein StackTrace ausgegeben und die Funktion liefert "null"\ zurück.\\
 Danach wird der Digest des Passworts mit "md.digest(passwd.getBytes())"\ berechnet und in einen StringBuffer geschrieben. Der StringBuffer wird benötigt, da Strings in Java nicht veränderbar sind. Das wird umgangen, indem man StringBuilder oder StringBuffer verwendet. \\
-Im darauf folgenden Schritt werden die letzten 4 Byte des Digest in ein anderes Feld kopiert, welches dann in Hexadezimalschreibweise in einen String geschrieben wird. Das ist nötig, da die Methode "get" der Hashtables und Hashmaps in Java die Methode "equals" des Eingabeobjekts benutzen, um die Eingabeobjekte mit den Objekten in der Tabelle zu vergleichen. Ein Bytearray besitzt diese Methode jedoch nicht, weshalb das Suchen in einer Hashtabelle damit nicht funktionieren würde.
+Im darauf folgenden Schritt werden die letzten 4 Byte des Digest in ein anderes Feld kopiert, welches dann in Hexadezimalschreibweise in einen String geschrieben wird. Das ist nötig, da die Methode "get" der Hashtables und Hashmaps in Java die Methode "\ equals"des Eingabeobjekts benutzen, um die Eingabeobjekte mit den Objekten in der Tabelle zu vergleichen. Ein Bytearray besitzt diese Methode jedoch nicht, weshalb das Suchen in einer Hashtabelle damit nicht funktionieren würde.
 Im letzten Schritt wird der Inhalt des StringBuffers, der im Moment den Digest darstellt, in einem String umgewandelt und zurückgegeben.\\
 In der Methode werden überwiegend Primitivtypen benutzt, da diese schneller anzulegen sind und einen geringeren Speicherplatzbedarf haben im Vergleich mit komplexen Klassen.
 
@@ -406,8 +413,7 @@ table = deserialize(path);
 \pagebreak
 \begin{samepage}
   \paragraph{Zu schreibende Dateien:}
-Bei zu schreibenden Dateien ist die Fehlerüberprüfung sehr eingeschränkt, da Dateioperationen nur ausgeführt werden sollten, wenn sicher ist, dass sie auch erfolgreich abgeschlossen werden können. Daher beschränken sich hier die 
-  \textbf{Codebeispiel}
+Bei zu schreibenden Dateien ist die Fehlerüberprüfung sehr eingeschränkt, da Dateioperationen nur ausgeführt werden sollten, wenn sicher ist, dass sie auch erfolgreich abgeschlossen werden können. Daher wird hier nur darauf geprüft, ob die zu schreibende bereits Datei existiert.
   \begin{lstlisting}[caption=Überprüfung eines Ausgabedateipfads, label=lst:OutputPathValidation]
                           while (!accepted) {
                             accepted = true;
@@ -638,11 +644,10 @@ Please choose an option:
 7 - Quit.
 \end{verbatim}
 \end{samepage}
-\begin{samepage}
 Nach dem Ende der Ausgabe muss das Programm mit \begin{verbatim}4 
 axr?AK 
 \end{verbatim} 
-angewiesen werden in der Hashtabelle nach dem Digest des Strings axr?AK zu suchen\\
+angewiesen werden in der Hashtabelle nach dem Digest des Strings axr?AK zu suchen.\\
 \textbf{Programmeingabe:}
 \begin{verbatim}
 4
@@ -662,11 +667,13 @@ Please choose an option:
 6 - Test the hash table with a number of generated passwords.
 7 - Quit.
 \end{verbatim}
-\end{samepage}
-\textbf{Erwartetes Testresultat}\\
+\textbf{Erwartetes Testresultat:}\\
 Das auffinden einer Kollision und keine Ausgabe einer Fehlermeldung.\\
-\textbf{Erzieltes Testresultat}\\
+\textbf{Erzieltes Testresultat:}\\
 Das Auffinden einer Kollision und keine Fehlermeldung.
 \newpage
-
+\section{Verbesserungsvorschläge}
+\begin{itemize}
+\item Es ist von Vorteil, wenn das Programm selbst erkennt, dass der Heap-Space für die zu generierende Anzahl an Einträgen nicht ausreichen wird und das dem Nutzer meldet.
+\end{itemize}
 \end{document}
